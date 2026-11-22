@@ -16,23 +16,20 @@
 
 // phpcs:disable moodle.Files.BoilerplateComment.CommentEndedTooSoon
 
-namespace tool_mucertify\muform\autocompletemany;
+namespace tool_mucertify\muform\cohortpicker;
 
-use tool_mulib\local\sql;
-use tool_mulib\muform\util\autocomplete\user_trait;
+use core\context;
 
 /**
- * Users that may be assigned to a certification manually.
+ * Cohort whose members are assigned to a certification manually.
  *
  * @package     tool_mucertify
  * @copyright   2026 Petr Skoda
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class source_manual_assign_users extends \tool_mulib\muform\autocompletemany\base {
-    use user_trait;
-
-    /** @var \context certification context */
-    private \context $context;
+final class source_manual_assign_cohortid extends \tool_mulib\muform\cohortpicker\base {
+    /** @var context certification context */
+    private context $context;
 
     /**
      * Constructor.
@@ -45,7 +42,7 @@ final class source_manual_assign_users extends \tool_mulib\muform\autocompletema
     ) {
         global $DB;
         $certification = $DB->get_record('tool_mucertify_certification', ['id' => $certificationid], '*', MUST_EXIST);
-        $this->context = \context::instance_by_id($certification->contextid);
+        $this->context = context::instance_by_id($certification->contextid);
         require_capability('tool/mucertify:assign', $this->context);
     }
 
@@ -55,29 +52,7 @@ final class source_manual_assign_users extends \tool_mulib\muform\autocompletema
     }
 
     #[\Override]
-    public function search(string $query, int $maxitems, array $exclude): ?array {
-        return $this->search_users($this->context, $query, $maxitems, $exclude, $this->get_where());
-    }
-
-    #[\Override]
-    public function labels(array $values): array {
-        return $this->user_labels($this->context, $values, $this->get_where());
-    }
-
-    #[\Override]
-    public function validate(array $values): array {
-        return $this->validate_users($values);
-    }
-
-    /**
-     * Users already assigned are not candidates.
-     *
-     * @return sql
-     */
-    private function get_where(): sql {
-        return new sql(
-            "NOT EXISTS (SELECT 'x' FROM {tool_mucertify_assignment} ca WHERE ca.userid = u.id AND ca.certificationid = :acertid)",
-            ['acertid' => $this->certificationid]
-        );
+    protected function get_context(): context {
+        return $this->context;
     }
 }

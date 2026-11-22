@@ -56,13 +56,13 @@ Feature: Certifications navigation behat steps test
     Then I should see "Certification 000"
     And I should see "Certification 001"
     And I should see "Certification 002"
-    And I should see "Certification 003"
+    And I should not see "Certification 003"
 
     When I am on the "System" "tool_mucertify > Certification management" page
     Then I should see "Certification 000"
     And I should see "Certification 001"
     And I should see "Certification 002"
-    And I should see "Certification 003"
+    And I should not see "Certification 003"
 
     When I am on the "Cat 1" "tool_mucertify > Certification management" page
     Then I should not see "Certification 000"
@@ -78,10 +78,10 @@ Feature: Certifications navigation behat steps test
     Then I should see "Certification 000"
     And I should see "Certification 001"
     And I should see "Certification 002"
+    And I click on "Remove filter: Archived" "button"
     And I should see "Certification 003"
 
-    When I press "+ Add filter"
-    And I click on "Exclude sub-categories" "button" in the ".tool_mulib-report-filter-bar-popover" "css_element"
+    When I click on "Exclude sub-categories: Any" "button"
     And I click on "Yes" "button" in the ".tool_mulib-report-filter-bar-popover" "css_element"
     Then I should see "Certification 000"
     And I should not see "Certification 001"
@@ -107,13 +107,13 @@ Feature: Certifications navigation behat steps test
     Then I should see "Certification 000"
     And I should see "Certification 001"
     And I should see "Certification 002"
-    And I should see "Certification 003"
+    And I should not see "Certification 003"
 
     When I am on the "System" "tool_mucertify > Certification management" page
     Then I should see "Certification 000"
     And I should see "Certification 001"
     And I should see "Certification 002"
-    And I should see "Certification 003"
+    And I should not see "Certification 003"
 
     When I am on the "Cat 1" "tool_mucertify > Certification management" page
     Then I should not see "Certification 000"
@@ -137,13 +137,13 @@ Feature: Certifications navigation behat steps test
     Then I should see "Certification 000"
     And I should see "Certification 001"
     And I should see "Certification 002"
-    And I should see "Certification 003"
+    And I should not see "Certification 003"
 
     When I am on the "System" "tool_mucertify > Certification management" page
     Then I should see "Certification 000"
     And I should see "Certification 001"
     And I should see "Certification 002"
-    And I should see "Certification 003"
+    And I should not see "Certification 003"
 
     When I am on the "Cat 1" "tool_mucertify > Certification management" page
     Then I should not see "Certification 000"

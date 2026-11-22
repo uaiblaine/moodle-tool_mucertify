@@ -8,12 +8,16 @@ The format of this change log follows the advice given at [Keep a CHANGELOG](htt
 
 ### Added
 
+- Czech translation and AI-produced previews of German, French, Italian, Portuguese and Spanish translations
 - cohort usage in certifications is listed in advanced cohort management
 - certification setting that blocks reuse of programs in periods, with notification of blocked recertification
 - certification_trait with certification search helpers for autocomplete sources
 
 ### Changed
 
+- My programs, My programs overview and My certifications blocks are not required any more,
+  the blocks depend on this plugin instead
+- users are assigned manually in a users picker panel with identity columns and paging instead of an autocomplete
 - certification catalogue was replaced by Universal catalogue plugin, public certifications are migrated
   to active catalogue sections, certifications visible to cohorts are migrated to draft sections
 - catalogue access is controlled by _tool/mucatalog:browse_ capability,
