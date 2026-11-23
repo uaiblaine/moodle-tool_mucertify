@@ -16,20 +16,18 @@
 
 // phpcs:disable moodle.Files.BoilerplateComment.CommentEndedTooSoon
 
-namespace tool_mucertify\muform\autocomplete;
+namespace tool_mucertify\muform\userpicker;
 
-use tool_mulib\muform\util\autocomplete\cohort_trait;
+use tool_mulib\local\sql;
 
 /**
- * Cohort whose members are assigned to a certification manually.
+ * Users that may be assigned to a certification manually.
  *
  * @package     tool_mucertify
  * @copyright   2026 Petr Skoda
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class source_manual_assign_cohortid extends \tool_mulib\muform\autocomplete\base {
-    use cohort_trait;
-
+final class source_manual_assign_users extends \tool_mulib\muform\userpicker\base {
     /** @var \context certification context */
     private \context $context;
 
@@ -54,12 +52,20 @@ final class source_manual_assign_cohortid extends \tool_mulib\muform\autocomplet
     }
 
     #[\Override]
-    public function search(string $query, int $maxitems): ?array {
-        return $this->search_cohorts($this->context, $query, $maxitems);
+    protected function get_context(): \core\context {
+        return $this->context;
     }
 
+    /**
+     * Users already assigned are not candidates.
+     *
+     * @return sql|null
+     */
     #[\Override]
-    public function label(string $value): ?string {
-        return $this->cohort_labels($this->context, [$value])[$value] ?? null;
+    protected function get_candidates_sql(): ?sql {
+        return new sql(
+            "NOT EXISTS (SELECT 'x' FROM {tool_mucertify_assignment} ca WHERE ca.userid = u.id AND ca.certificationid = :acertid)",
+            ['acertid' => $this->certificationid]
+        );
     }
 }

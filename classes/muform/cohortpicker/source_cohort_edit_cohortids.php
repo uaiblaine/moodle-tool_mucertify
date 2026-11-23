@@ -16,9 +16,9 @@
 
 // phpcs:disable moodle.Files.BoilerplateComment.CommentEndedTooSoon
 
-namespace tool_mucertify\muform\autocompletemany;
+namespace tool_mucertify\muform\cohortpicker;
 
-use tool_mulib\muform\util\autocomplete\cohort_trait;
+use core\context;
 
 /**
  * Cohorts of the cohort assignment source.
@@ -27,11 +27,9 @@ use tool_mulib\muform\util\autocomplete\cohort_trait;
  * @copyright   2026 Petr Skoda
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class source_cohort_edit_cohortids extends \tool_mulib\muform\autocompletemany\base {
-    use cohort_trait;
-
-    /** @var \context certification context */
-    private \context $context;
+final class source_cohort_edit_cohortids extends \tool_mulib\muform\cohortpicker\base {
+    /** @var context certification context */
+    private context $context;
 
     /**
      * Constructor.
@@ -44,7 +42,7 @@ final class source_cohort_edit_cohortids extends \tool_mulib\muform\autocomplete
     ) {
         global $DB;
         $certification = $DB->get_record('tool_mucertify_certification', ['id' => $certificationid], '*', MUST_EXIST);
-        $this->context = \context::instance_by_id($certification->contextid);
+        $this->context = context::instance_by_id($certification->contextid);
         require_capability('tool/mucertify:edit', $this->context);
     }
 
@@ -54,26 +52,17 @@ final class source_cohort_edit_cohortids extends \tool_mulib\muform\autocomplete
     }
 
     #[\Override]
-    public function search(string $query, int $maxitems, array $exclude): ?array {
-        return $this->search_cohorts($this->context, $query, $maxitems, $exclude);
-    }
-
-    #[\Override]
-    public function labels(array $values): array {
-        return $this->cohort_labels($this->context, $values, $this->get_current());
-    }
-
-    #[\Override]
-    public function validate(array $values): array {
-        return $this->validate_cohorts($this->context, $values, $this->get_current());
+    protected function get_context(): context {
+        return $this->context;
     }
 
     /**
-     * Cohorts already used.
+     * Cohorts already assigned stay valid.
      *
      * @return int[]
      */
-    private function get_current(): array {
+    #[\Override]
+    protected function get_current_cohortids(): array {
         global $DB;
         $source = $DB->get_record('tool_mucertify_source', ['certificationid' => $this->certificationid, 'type' => 'cohort']);
         if (!$source) {

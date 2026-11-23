@@ -101,6 +101,7 @@ Feature: Manual certification assignment tests
     And I should not see "Student 3"
     And I should not see "Student 4"
 
+    And I click on "Remove filter: Archived" "button"
     And I click on "Actions" "link" in the "Student 2" "table_row"
     When I click on "Archive assignment" "link" in the "Student 2" "table_row"
     And I click on "Archive assignment" "button" in the "dialog[open]" "css_element"
@@ -328,7 +329,7 @@ Feature: Manual certification assignment tests
     And I press "Upload assignments"
     And I should see "Assigned 2 users, skipped 0."
     And I follow "Student 1"
-    Then I should see "Temporary valid" in the "Certification status" definition list item
+    Then I should see "Temporarily valid" in the "Certification status" definition list item
     And I should see "Tuesday, 2 January 2035, 12:00" in the "Temporary certification until" definition list item
     And the following should exist in the "reportbuilder-table" table:
       | Certification due | Window closing | Program     | Expiration     | Re-certify automatically | Status  |
